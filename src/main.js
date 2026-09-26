@@ -390,12 +390,18 @@ window.addEventListener('pageshow', event => {
   document.body.classList.remove('is-navigating');
 });
 
-// Suaviza a roda do mouse em todas as rotas, preservando rolagens internas e a preferência de movimento reduzido.
+// Suaviza a roda do mouse sem alterar o scroll-behavior usado pelas âncoras.
 if (typeof window.matchMedia === 'function' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  // Âncoras usam scrollIntoView com animação explícita. Na roda do mouse,
-  // cada passo do requestAnimationFrame precisa atualizar a posição sem uma segunda animação do navegador.
   let wheelTarget = window.scrollY;
   let wheelFrame = 0;
+  let wheelStart = window.scrollY;
+  let wheelStartedAt = 0;
+  const stopWheel = () => {
+    if (wheelFrame) cancelAnimationFrame(wheelFrame);
+    wheelFrame = 0;
+    wheelStartedAt = 0;
+    wheelTarget = window.scrollY;
+  };
   const hasScrollableParent = (target, delta) => {
     for (let element = target instanceof Element ? target : null; element && element !== document.body; element = element.parentElement) {
       const overflow = window.getComputedStyle(element).overflowY;
@@ -404,16 +410,13 @@ if (typeof window.matchMedia === 'function' && !window.matchMedia('(prefers-redu
     }
     return false;
   };
-  const advanceWheel = () => {
-    const remaining = wheelTarget - window.scrollY;
-    if (Math.abs(remaining) < 0.8) {
-      window.scrollTo(0, wheelTarget);
-      wheelFrame = 0;
-      document.documentElement.style.scrollBehavior = '';
-      return;
-    }
-    window.scrollTo(0, window.scrollY + remaining * 0.16);
-    wheelFrame = requestAnimationFrame(advanceWheel);
+  const advanceWheel = now => {
+    if (!wheelStartedAt) wheelStartedAt = now;
+    const progress = Math.min((now - wheelStartedAt) / 360, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    window.scrollTo({ top: wheelStart + (wheelTarget - wheelStart) * eased, behavior: 'instant' });
+    if (progress < 1) wheelFrame = requestAnimationFrame(advanceWheel);
+    else stopWheel();
   };
   window.addEventListener('wheel', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
@@ -424,17 +427,15 @@ if (typeof window.matchMedia === 'function' && !window.matchMedia('(prefers-redu
     event.preventDefault();
     if (!wheelFrame) wheelTarget = window.scrollY;
     const limit = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    wheelTarget = Math.max(0, Math.min(limit, wheelTarget + delta));
-    if (!wheelFrame) {
-      document.documentElement.style.scrollBehavior = 'auto';
-      wheelFrame = requestAnimationFrame(advanceWheel);
-    }
+    wheelTarget = Math.max(0, Math.min(limit, wheelTarget + Math.max(-window.innerHeight, Math.min(window.innerHeight, delta))));
+    wheelTarget = Math.max(window.scrollY - window.innerHeight * 1.5, Math.min(window.scrollY + window.innerHeight * 1.5, wheelTarget));
+    wheelStart = window.scrollY;
+    wheelStartedAt = 0;
+    if (!wheelFrame) wheelFrame = requestAnimationFrame(advanceWheel);
   }, { passive: false });
-  document.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => {
-    if (wheelFrame) cancelAnimationFrame(wheelFrame);
-    wheelFrame = 0;
-    document.documentElement.style.scrollBehavior = '';
-  }));
+  document.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', stopWheel));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopWheel(); });
+  window.addEventListener('pagehide', stopWheel);
 }
 
 const menuToggle = document.querySelector('.menu-toggle');
