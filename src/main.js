@@ -347,7 +347,9 @@ let html = path === '/' || path === '/index.html' ? homePage()
   : path === '/contato' ? contactPage()
   : services.find(s=>servicePath(s)===path) ? servicePage(services.find(s=>servicePath(s)===path))
   : homePage();
-document.getElementById('app').innerHTML = refineEditorial(`<div id="topo"></div>${html}`);
+const app = document.getElementById('app');
+app.innerHTML = refineEditorial(`<div id="topo"></div>${html}`);
+app.classList.add('route-entering');
 document.title = (path === '/' ? 'Home' : path.split('/').filter(Boolean).pop().replaceAll('-', ' ')) + ' | Orbe Soft';
 document.querySelectorAll('a[href^="/"]').forEach(link => {
   link.href = './index.html?page=' + encodeURIComponent(link.getAttribute('href'));
@@ -366,8 +368,30 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
+let pendingNavigation = 0;
+document.addEventListener('click', event => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+  if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+  const href = link.getAttribute('href');
+  if (!href || href.startsWith('#')) return;
+  const next = new URL(link.href, location.href);
+  if (next.origin !== location.origin || !next.pathname.endsWith('/index.html') || !next.searchParams.has('page')) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  event.preventDefault();
+  if (pendingNavigation) clearTimeout(pendingNavigation);
+  app.classList.remove('route-entering');
+  document.body.classList.add('is-navigating');
+  pendingNavigation = window.setTimeout(() => location.assign(next.href), 190);
+});
+window.addEventListener('pageshow', event => {
+  if (!event.persisted) return;
+  app.classList.remove('route-entering');
+  document.body.classList.remove('is-navigating');
+});
+
 // Suaviza a roda do mouse em todas as rotas, preservando rolagens internas e a preferência de movimento reduzido.
-if (typeof window.matchMedia === 'function') {
+if (typeof window.matchMedia === 'function' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   // Âncoras usam scrollIntoView com animação explícita. Na roda do mouse,
   // cada passo do requestAnimationFrame precisa atualizar a posição sem uma segunda animação do navegador.
   let wheelTarget = window.scrollY;
@@ -396,7 +420,7 @@ if (typeof window.matchMedia === 'function') {
     if (event.target?.closest?.('select, textarea, input, [contenteditable="true"]')) return;
     const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
     const delta = event.deltaY * scale;
-    if (Math.abs(delta) < 1 || hasScrollableParent(event.target, delta)) return;
+    if (Math.abs(delta) < 1 || (event.deltaMode === 0 && Math.abs(delta) < 50) || hasScrollableParent(event.target, delta)) return;
     event.preventDefault();
     if (!wheelFrame) wheelTarget = window.scrollY;
     const limit = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);

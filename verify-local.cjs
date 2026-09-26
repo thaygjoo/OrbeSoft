@@ -17,9 +17,10 @@ const figmaCopy = fs.readFileSync('src/figma-copy.js', 'utf8');
 const main = fs.readFileSync('src/main.js', 'utf8');
 for (const route of routes) {
   let output = '';
-  const app = { set innerHTML(value) { output = value; } };
+  const app = { classList: { add() {}, remove() {} }, set innerHTML(value) { output = value; } };
   const document = {
     title: '',
+    addEventListener: () => {},
     getElementById: (id) => id === 'app' ? app : null,
     querySelectorAll: () => [],
     querySelector: () => null

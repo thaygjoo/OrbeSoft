@@ -600,3 +600,19 @@ main p,.section p,.service-hero>p,.page-hero p{color:var(--orbe-copy)}
 @media(max-width:680px){
   .filters .filter-select{flex:0 0 auto;width:100%}
 }
+
+/* Transições leves para a navegação entre páginas e o menu compacto. */
+#app{transition:opacity .19s ease}
+#app.route-entering{animation:route-fade-in .3s ease-out}
+#app.route-entering main{animation:route-content-in .38s cubic-bezier(.22,1,.36,1)}
+body.is-navigating #app{opacity:0;pointer-events:none}
+@keyframes route-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes route-content-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:680px){
+  .main-nav{display:flex;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);transition:opacity .24s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility .24s}
+  .main-nav.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  #app.route-entering,#app.route-entering main{animation:none!important}
+  #app,.main-nav{transition:none!important}
+}
