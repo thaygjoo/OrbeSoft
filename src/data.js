@@ -41,7 +41,7 @@ const services = [
     detail:['Seu sistema atual trava ou falha com frequência em picos de uso','Sua equipe de TI passa mais tempo apagando incêndio do que evoluindo o produto','Cada nova funcionalidade demora mais do que deveria e gera bugs','A integração entre sistemas é feita manualmente','Você depende de um único desenvolvedor ou fornecedor','Seu sistema não vai aguentar o crescimento planejado'],
     proofTitle:'Processos validados por gigantes do mercado.',
     proofText:'Empresas como Jeep, Vale, Gerdau e Magneti Marelli validaram nossa engenharia em contextos onde estabilidade e previsibilidade são pré-requisitos.',
-    after:{label:'TECHSTART',title:'Ainda na fase de ideia? Comece pelo TechStart.',text:'A Fábrica executa com mais velocidade e menos risco quando o produto já passou por validação de mercado e prototipação.',link:'/solucoes/techstart',linkText:'Conheça a TechStart',image:'imgImage.png'},
+    after:{label:'TECHSTART',title:'Ainda na fase de ideia? Comece pelo TechStart.',text:'A Fábrica executa com mais velocidade e menos risco quando o produto já passou por validação de mercado e prototipação.',link:'/solucoes/techstart',linkText:'Conheça a TechStart',image:'imgImage.webp'},
     cta:'Pronto para escalar a sua operação com segurança?'
   },
   {
@@ -121,11 +121,11 @@ const services = [
 ];
 
 const cases = [
-  {title:'Como reduzimos em 40% o tempo de análise operacional com machine learning',category:'Inteligência Artificial',sector:'Indústria',description:'A operação dependia de consolidação manual de dados — horas perdidas por turno, decisões tomadas com informação atrasada.',image:'imgRectangle213.png'},
-  {title:'Como modernizamos um sistema legado crítico sem parar a operação',category:'Fábrica de Software',sector:'Indústria',description:'Um sistema central com anos de acumulação técnica travava o crescimento e concentrava risco em uma estrutura frágil.',image:'imgRectangle214.png'},
-  {title:'Como aumentamos em 60% a taxa de conclusão de cadastro com redesign de fluxo',category:'UX/UI Design',sector:'Serviços',description:'O produto funcionava, mas os usuários abandonavam o onboarding antes de completar o cadastro.',image:'imgRectangle215.png'},
-  {title:'Como reduzimos paradas não planejadas em 35% com monitoramento em tempo real',category:'Indústria 4.0',sector:'Indústria',description:'Falhas em equipamentos eram descobertas tarde demais — quando a linha já havia parado.',image:'imgRectangle216.png'},
-  {title:'Como ampliamos a capacidade de entrega sem aumentar o headcount fixo',category:'IT Staff Augmentation',sector:'Tecnologia',description:'O time de produto tinha backlog crescente e não conseguia entregar features críticas no prazo.',image:'imgRectangle217.png'}
+  {title:'Como reduzimos em 40% o tempo de análise operacional com machine learning',category:'Inteligência Artificial',sector:'Indústria',description:'A operação dependia de consolidação manual de dados — horas perdidas por turno, decisões tomadas com informação atrasada.',image:'imgRectangle213.webp'},
+  {title:'Como modernizamos um sistema legado crítico sem parar a operação',category:'Fábrica de Software',sector:'Indústria',description:'Um sistema central com anos de acumulação técnica travava o crescimento e concentrava risco em uma estrutura frágil.',image:'imgRectangle214.webp'},
+  {title:'Como aumentamos em 60% a taxa de conclusão de cadastro com redesign de fluxo',category:'UX/UI Design',sector:'Serviços',description:'O produto funcionava, mas os usuários abandonavam o onboarding antes de completar o cadastro.',image:'imgRectangle215.webp'},
+  {title:'Como reduzimos paradas não planejadas em 35% com monitoramento em tempo real',category:'Indústria 4.0',sector:'Indústria',description:'Falhas em equipamentos eram descobertas tarde demais — quando a linha já havia parado.',image:'imgRectangle216.webp'},
+  {title:'Como ampliamos a capacidade de entrega sem aumentar o headcount fixo',category:'IT Staff Augmentation',sector:'Tecnologia',description:'O time de produto tinha backlog crescente e não conseguia entregar features críticas no prazo.',image:'imgRectangle217.webp'}
 ];
 const caseStories = [
   {
