@@ -602,6 +602,14 @@ main p,.section p,.service-hero>p,.page-hero p{color:var(--orbe-copy)}
 }
 
 /* Transições leves para a navegação entre páginas e o menu compacto. */
+.home-results-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center}
+.home-results-heading h2{margin-bottom:12px}
+.home-results-heading p{margin-bottom:0}
+.home-results-heading>.button{justify-self:end}
+@media(max-width:680px){
+  .home-results-heading{grid-template-columns:1fr;gap:24px}
+  .home-results-heading>.button{justify-self:start}
+}
 #app{transition:opacity .19s ease}
 #app.route-entering{animation:route-fade-in .3s ease-out}
 #app.route-entering main{animation:route-content-in .38s cubic-bezier(.22,1,.36,1)}
